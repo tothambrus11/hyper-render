@@ -11,9 +11,11 @@ keywords = ["html", "pdf", "png", "render", "headless"]
 categories = ["rendering", "graphics", "multimedia::images"]
 
 [features]
-default = ["png", "pdf"]
+default = ["png", "pdf", "net"]
 png = ["dep:anyrender", "dep:anyrender_vello_cpu", "dep:png"]
 pdf = ["dep:krilla", "dep:stylo", "dep:parley", "dep:linebender_resource_handle"]
+# Fetch remote resources (images, stylesheets, fonts) over http(s)/file/data URLs
+net = ["dep:blitz-net", "dep:tokio"]
 
 [dependencies]
 # Core HTML/CSS parsing and layout (always required)
@@ -32,6 +34,10 @@ krilla = { version = "0.6", optional = true }
 stylo = { version = "0.8", optional = true }  # For accessing computed styles in PDF rendering
 parley = { version = "0.6", optional = true }  # For text layout types
 linebender_resource_handle = { version = "0.1", optional = true }  # For font data types
+
+# Network resource loading (optional, enabled by default)
+blitz-net = { version = "0.2.1", optional = true }
+tokio = { version = "1", optional = true, features = ["rt-multi-thread", "sync", "time"] }
 
 # Common dependencies
 thiserror = "2"
@@ -52,3 +58,8 @@ path = "examples/simple.rs"
 [[example]]
 name = "from_file"
 path = "examples/from_file.rs"
+
+[[example]]
+name = "remote_image"
+path = "examples/remote_image.rs"
+required-features = ["net"]

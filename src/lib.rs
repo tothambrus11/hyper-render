@@ -54,13 +54,19 @@
 
 mod config;
 mod error;
+#[cfg(feature = "net")]
+mod net;
 mod render;
 
 pub use config::{ColorScheme, Config, OutputFormat};
 pub use error::{Error, Result};
 
+use std::sync::Arc;
+
+use blitz_dom::net::Resource;
 use blitz_dom::DocumentConfig;
 use blitz_html::HtmlDocument;
+use blitz_traits::net::NetProvider;
 use blitz_traits::shell::Viewport;
 
 /// Render HTML content to the specified output format.
@@ -104,11 +110,33 @@ pub fn render(html: &str, config: Config) -> Result<Vec<u8>> {
     // Validate configuration
     config.validate()?;
 
-    // Parse HTML and create document
-    let mut document = create_document(html, &config)?;
+    // Set up networking so external resources (images, stylesheets, fonts) can
+    // be fetched. The provider must exist before parsing so requests triggered
+    // during parsing/layout are dispatched.
+    #[cfg(feature = "net")]
+    let mut net_env = net::NetEnv::new()?;
 
-    // Resolve styles and compute layout
+    let net_provider: Option<Arc<dyn NetProvider<Resource>>> = {
+        #[cfg(feature = "net")]
+        {
+            Some(net_env.provider())
+        }
+        #[cfg(not(feature = "net"))]
+        {
+            None
+        }
+    };
+
+    // Parse HTML and create document
+    let mut document = create_document(html, &config, net_provider)?;
+
+    // Resolve styles and compute layout. This dispatches the initial batch of
+    // resource requests for linked stylesheets, images, etc.
     document.resolve(0.0);
+
+    // Block until all fetched resources have been applied to the document.
+    #[cfg(feature = "net")]
+    net_env.load_resources(&mut document);
 
     // Render to the specified format
     match config.format {
@@ -156,7 +184,11 @@ pub fn render_to_pdf(html: &str, config: Config) -> Result<Vec<u8>> {
 }
 
 /// Create and configure a Blitz document from HTML.
-fn create_document(html: &str, config: &Config) -> Result<HtmlDocument> {
+fn create_document(
+    html: &str,
+    config: &Config,
+    net_provider: Option<Arc<dyn NetProvider<Resource>>>,
+) -> Result<HtmlDocument> {
     let viewport = Viewport::new(
         config.width,
         config.height,
@@ -166,6 +198,7 @@ fn create_document(html: &str, config: &Config) -> Result<HtmlDocument> {
 
     let doc_config = DocumentConfig {
         viewport: Some(viewport),
+        net_provider,
         ..Default::default()
     };
 

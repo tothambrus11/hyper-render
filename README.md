@@ -8,6 +8,7 @@ A Chromium-free HTML rendering engine for generating PNG and PDF outputs in pure
 - **PNG output** — High-quality raster images via CPU-based rendering
 - **PDF output** — Vector PDF documents with embedded fonts
 - **Modern CSS** — Flexbox, Grid, and common CSS properties via Stylo (Firefox's CSS engine)
+- **Remote resources** — Fetch images, stylesheets, and web fonts over `http(s)`/`file`/`data` URLs (optional `net` feature, enabled by default)
 - **Simple API** — Single function call to render HTML to bytes
 
 ## Installation
@@ -23,8 +24,17 @@ Or with specific features:
 
 ```toml
 [dependencies]
+# Just PNG, no networking (no async/TLS dependencies)
 hyper-render = { version = "0.1", default-features = false, features = ["png"] }
 ```
+
+Available features (all enabled by default):
+
+| Feature | Description |
+|---------|-------------|
+| `png`   | PNG output via the Vello CPU rasterizer |
+| `pdf`   | PDF output via Krilla |
+| `net`   | Fetch remote resources referenced by the HTML |
 
 ## Quick Start
 
@@ -90,6 +100,33 @@ let config = Config::new()
 | `OutputFormat::Png` | ✅ Full | Raster image via Vello CPU renderer |
 | `OutputFormat::Pdf` | ✅ Full | Vector PDF with embedded fonts and backgrounds |
 
+### Network Resources
+
+When the `net` feature is enabled (the default), resources referenced by the
+HTML — `<img src>`, `<link rel="stylesheet">`, `@import`, and `@font-face` — are
+fetched before rendering. The following URL schemes are supported:
+
+- `http://` and `https://` — fetched over the network
+- `file://` — read from the local filesystem
+- `data:` — decoded inline
+
+```rust
+use hyper_render::{render, Config};
+
+let html = r#"<img src="https://example.com/logo.png" />"#;
+let png = render(html, Config::default())?; // logo is fetched and painted
+# Ok::<(), hyper_render::Error>(())
+```
+
+Resource loading is synchronous from the caller's perspective: `render` blocks
+until all referenced resources have been fetched and applied (subject to an
+internal timeout), so no async runtime is required by your code.
+
+> **TLS note:** networking uses `reqwest` with the native TLS backend, which
+> requires OpenSSL development headers at build time (e.g. `libssl-dev` on
+> Debian/Ubuntu, `openssl-devel` on Fedora). To build without any networking,
+> async, or TLS dependencies, disable the `net` feature.
+
 ## Try It Yourself
 
 ### Clone and Build
@@ -107,6 +144,12 @@ cargo run --example simple
 ```
 
 This generates `output.png` and `output.pdf` in the current directory.
+
+To see remote resource loading in action (requires network + the `net` feature):
+
+```bash
+cargo run --example remote_image
+```
 
 ### Render Your Own HTML
 
@@ -235,8 +278,7 @@ cargo run --example from_file -- input.html output.png 2>/dev/null
 ## Limitations
 
 - **JavaScript** — Not supported (by design)
-- **Web fonts** — System fonts only; `@font-face` not yet supported
-- **Images** — External image loading not yet implemented
+- **Networking** — Remote resource loading requires the `net` feature; with it disabled, only inline (`data:`-free) content is rendered
 - **Some CSS** — Advanced features like `position: sticky`, complex transforms may not work
 
 ## Dependencies
@@ -247,6 +289,7 @@ Core rendering stack:
 - [Taffy](https://github.com/DioxusLabs/taffy) — Flexbox/Grid layout
 - [Vello](https://github.com/linebender/vello) — 2D graphics (CPU renderer)
 - [Krilla](https://github.com/LaurenzV/krilla) — PDF generation
+- [blitz-net](https://github.com/DioxusLabs/blitz) — Resource fetching (`net` feature)
 
 ## License
 
