@@ -163,14 +163,11 @@ Blitz (DOM + rendering coordination)
 Run benchmarks locally:
 
 ```bash
-# Full benchmark suite
-cargo bench --all-features
-
-# Specific benchmark group
-cargo bench full_pipeline
-
-# Generate HTML reports
-cargo bench --all-features  # Reports saved to target/criterion/
+# 1. Run the scaling experiment (all 4 modes, writes scaling_results.csv)
+cargo run --release --example parallel_scaling
+ 
+# 2. Generate the chart from the CSV
+python3 benches/plot_scaling.py
 ```
 
 #### Sample Results (M1 MacBook Pro)

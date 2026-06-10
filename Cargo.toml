@@ -40,10 +40,37 @@ thiserror = "2"
 tokio = { version = "1", features = ["full"] }
 criterion = { version = "0.5", features = ["html_reports"] }
 pdf-extract = "0.10"
+pprof = { version = "0.14", features = ["flamegraph", "frame-pointer"] }
+
+[profile.profiling]
+inherits = "release"
+debug = 1              # line-level symbols for readable flamegraphs
+strip = "none"
+force-frame-pointers = true   # required by pprof frame-pointer unwinder
 
 [[bench]]
 name = "render"
 harness = false
+
+[[bench]]
+name = "parallel_throughput"
+harness = false
+
+[[example]]
+name = "bench_worker"
+path = "examples/bench_worker.rs"
+
+[[example]]
+name = "parallel_scaling"
+path = "examples/parallel_scaling.rs"
+
+[[example]]
+name = "time_setup"
+path = "examples/time_setup.rs"
+
+[[example]]
+name = "profile_parallel"
+path = "examples/profile_parallel.rs"
 
 [[example]]
 name = "simple"
