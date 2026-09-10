@@ -63,3 +63,8 @@ path = "examples/from_file.rs"
 name = "remote_image"
 path = "examples/remote_image.rs"
 required-features = ["net"]
+
+[[example]]
+name = "task0_probe"
+path = "examples/task0_probe.rs"
+required-features = ["pdf"]

@@ -1,0 +1,21 @@
+== Part 1: style::attr::parse_legacy_color (already compiled into Blitz) ==
+  "white"        -> Ok(rgb 255 255 255 / a 1.00)
+  "ffffff"       -> Ok(rgb 255 255 255 / a 1.00)
+  "#ffffff"      -> Ok(rgb 255 255 255 / a 1.00)
+  "#fff"         -> Ok(rgb 255 255 255 / a 1.00)
+  "red"          -> Ok(rgb 255   0   0 / a 1.00)
+  "FFF"          -> Ok(rgb  15  15  15 / a 1.00)
+  "bogus"        -> Ok(rgb 176   0   0 / a 1.00)
+  "#gg0000"      -> Ok(rgb   0   0   0 / a 1.00)
+  "chucknorris"  -> Ok(rgb 192   0   0 / a 1.00)
+
+== Part 2: Blitz computed style for legacy presentational attributes ==
+  case                               background-color       color
+  table bgcolor="#ffffff" (hash)     rgb(255,255,255)       rgb(0,0,0)
+  table bgcolor="ffffff" (bare)      transparent            rgb(0,0,0)
+  table bgcolor="white" (named)      transparent            rgb(0,0,0)
+  body bgcolor="white"               transparent            rgb(0,0,0)
+  body bgcolor="#ffffff"             rgb(255,255,255)       rgb(0,0,0)
+  font color="white"                 transparent            rgb(0,0,0)
+  body text="white"                  transparent            rgb(0,0,0)
+  hr color="white"                   transparent            rgb(128,128,128)

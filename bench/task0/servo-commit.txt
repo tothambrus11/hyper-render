@@ -1,0 +1,2 @@
+92d90f0 script_webgpu: Move GlobalScope and Promise trait bounds to Equivalence trait (#47968)
+servo 92d90f0e046da3afd4470aa0f528bff92bdac264

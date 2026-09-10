@@ -1,0 +1,12 @@
+Recorded: 2026-09-10T15:23:01Z
+CPU:      Intel(R) Xeon(R) Processor @ 2.10GHz (nproc=4)
+Kernel:   6.18.44-fc-v24
+cgroup cpu.max: unset (no quota)
+rustc:    rustc 1.94.1 (e408947bf 2026-03-25)
+blitz-dom:  0.2.4
+blitz-html: 0.2.0
+stylo:      0.8.0  (default features = ["servo"] -> style::attr compiled in)
+html5ever:  0.35.0
+cssparser:  0.35.0
+selectors:  0.32.0
+servo checkout: 92d90f0e046da3afd4470aa0f528bff92bdac264 (2026-09-10)
