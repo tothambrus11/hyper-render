@@ -1,0 +1,46 @@
+--- /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stylo-0.20.0/sharing/checks.rs	2006-07-24 01:21:28.000000000 +0000
++++ /tmp/stylo-patched/sharing/checks.rs	2026-09-10 16:04:14.108879817 +0000
+@@ -80,14 +80,31 @@
+ }
+ 
+ /// Whether two elements have the same same presentational attributes.
++///
++/// First checks pointer identity (fast path), then falls back to value comparison,
++/// mirroring `have_same_style_attribute`.
+ pub fn have_same_presentational_hints<E>(
+     target: &mut StyleSharingTarget<E>,
+     candidate: &mut StyleSharingCandidate<E>,
++    shared_context: &SharedStyleContext,
+ ) -> bool
+ where
+     E: TElement,
+ {
+-    target.pres_hints() == candidate.pres_hints()
++    if target.pres_hints() == candidate.pres_hints() {
++        return true;
++    }
++    let guard = shared_context.guards.author;
++    let t = target.pres_hints();
++    let c = candidate.pres_hints();
++    if t.len() != c.len() {
++        return false;
++    }
++    t.iter().zip(c.iter()).all(|(a, b)| {
++        a.specificity == b.specificity
++            && a.cascade_priority == b.cascade_priority
++            && *a.source.read(guard) == *b.source.read(guard)
++    })
+ }
+ 
+ /// Whether a given element has the same class attribute as a given candidate.
+--- /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stylo-0.20.0/sharing/mod.rs	2006-07-24 01:21:28.000000000 +0000
++++ /tmp/stylo-patched/sharing/mod.rs	2026-09-10 16:04:14.109199513 +0000
+@@ -854,7 +854,7 @@
+             return None;
+         }
+ 
+-        if !checks::have_same_presentational_hints(target, candidate) {
++        if !checks::have_same_presentational_hints(target, candidate, shared_context) {
+             trace!("Miss: Pres Hints");
+             return None;
+         }

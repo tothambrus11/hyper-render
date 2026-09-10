@@ -1,0 +1,10 @@
+(a) border on <img> -- is the reported MISSING a value collision?
+    border=(none)  -> BorderSideWidth(3px)
+    border=3       -> BorderSideWidth(3px)     <-- collides with `medium` default
+    border=5       -> BorderSideWidth(5px)     <-- Blitz DOES apply it
+    border=10      -> BorderSideWidth(10px)
+
+(b) quirks mode -- unitless length is valid ONLY in quirks mode
+    no doctype (should be quirks) -> height Auto
+    <!DOCTYPE html> (no-quirks)   -> height Auto
+    identical => the parser's quirks mode never reached stylo.

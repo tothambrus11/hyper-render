@@ -1,0 +1,31 @@
+stylo pres-hint style-sharing: stock vs patched
+===============================================
+Probe: blitztest examples/sharing.rs (900 elements), unmodified.
+Machine: Intel Xeon @2.10GHz, 4 vCPU, no cgroup quota. Times are min-of-15, ms.
+Patch: bench/task0/stylo-pres-hint-sharing.patch applied to stylo 0.20.0 via
+       [patch.crates-io], blitz-dom/blitz-html 0.3.0-beta.2 unmodified.
+
+                                       STOCK          PATCHED
+case                                   parse  style   parse  style
+identical, no attrs                     1.56   0.50    1.55   0.52
+identical inline style                  2.67   0.54    2.82   0.61
+UNIQUE inline style per element         2.70   4.21    3.02   4.41
+identical bgcolor                       2.12   4.89    2.07   0.70   <-- 7.0x faster
+UNIQUE bgcolor per element              2.16   4.84    2.19   5.53   <-- correctly still slow
+identical class (sheet rule)            1.94   0.58    2.03   0.63
+
+Reading:
+- STOCK: "identical bgcolor" (4.89) costs the same as "UNIQUE bgcolor" (4.84). The hint path
+  behaves as if every element were distinct, because have_same_presentational_hints compares
+  Arc pointers only and Blitz allocates a fresh Arc per declaration.
+- PATCHED: "identical bgcolor" drops to 0.70, landing beside "identical inline style" (0.61)
+  and "identical, no attrs" (0.52). Style sharing is restored.
+- "UNIQUE bgcolor" stays slow (5.53) -- those elements genuinely differ and must not share.
+  The patch does not cheat.
+- Cost of the fallback: ~0.2-0.7 ms on cases where hints genuinely differ per element (the
+  failed value comparison before giving up). Pays for itself whenever hints repeat, which is
+  the common case in marketing mail.
+
+Correctness under the patch (both unchanged from stock):
+- examples/preshints  -> applied: 12   MISSING: 16   (identical to preshints-results.txt)
+- bin/malformed       -> all 6 swallowed-content cases identical

@@ -10,3 +10,11 @@ html5ever:  0.35.0
 cssparser:  0.35.0
 selectors:  0.32.0
 servo checkout: 92d90f0e046da3afd4470aa0f528bff92bdac264 (2026-09-10)
+
+--- versions under evaluation (from the uploaded blitz-test suite) ---
+blitz-dom / blitz-html / blitz-traits: =0.3.0-beta.2
+stylo:      0.20.0   (default features = ["servo"] -> style::servo::attr compiled in)
+html5ever:  0.39.0
+cssparser:  0.37.0
+NOTE: hyper-render itself pins blitz 0.2.x / stylo 0.8. The Task 0 analysis targets
+      0.3.0-beta.2 / stylo 0.20, which is what the spam pipeline uses.
