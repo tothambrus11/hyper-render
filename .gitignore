@@ -10,3 +10,6 @@ remote_image.png
 .DS_Store
 
 temp
+
+# blitz-probe build output
+bench/blitz-probe/target/

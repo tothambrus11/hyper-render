@@ -1,0 +1,17 @@
+[package]
+name = "blitz-probe"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+blitz-dom = { version = "=0.3.0-beta.2", default-features = false }
+blitz-html = { version = "=0.3.0-beta.2", default-features = false }
+blitz-traits = { version = "=0.3.0-beta.2" }
+html5ever = "=0.39.0"
+regex-lite = "0.1.9"
+
+[profile.dev]
+opt-level = 1
+
+[patch.crates-io]
+stylo = { path = "/tmp/stylo-patched" }

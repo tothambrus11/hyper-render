@@ -1,0 +1,18 @@
+--- malformed CSS: computed display vs spec ---
+css-junk-inline            display=Display(0) hidden_ancestor=false expect: none (junk decls dropped, valid one survives)
+css-unbalanced-brace       display=Display(0) hidden_ancestor=false expect: none (block implicitly closed at EOF)
+css-bad-important          display=Display(514) hidden_ancestor=false expect: block (tokens after !important invalidate the declaration)
+css-nested-junk            display=Display(514) hidden_ancestor=false expect: block (.a nested in invalid qualified rule -> dropped)
+css-valid-media-empty      display=Display(0) hidden_ancestor=false expect: none (empty media query list matches all)
+css-unknown-atrule         display=Display(0) hidden_ancestor=false expect: none (unknown at-rule consumed, following rule survives)
+css-unclosed-comment       display=Display(0) hidden_ancestor=false expect: none (comment before rule irrelevant; rule already parsed)
+css-bad-selector-then-good display=Display(0) hidden_ancestor=false expect: none (invalid selector drops only its own rule)
+css-semicolon-in-block     display=Display(0) hidden_ancestor=false expect: none (stray semicolons ignored)
+
+--- malformed HTML: is swallowed content reachable, and correctly hidden? ---
+unclosed-style       present, under_display_none=true           expect: text inside <style> -> under display:none
+unclosed-script      present, under_display_none=true           expect: text inside <script> -> under display:none
+unclosed-title       present, under_display_none=true           expect: text inside <title> -> under display:none
+unclosed-textarea    present, under_display_none=false          expect: text inside <textarea> -> VISIBLE (textarea renders)
+unclosed-comment     ABSENT                                     expect: inside comment -> ABSENT from text
+plaintext            present, under_display_none=false          expect: text inside <plaintext> -> visible raw text

@@ -1,0 +1,34 @@
+CASE                           MS  RESULT     DETAIL
+empty                          20  ok         elements=3 styled=3 max_depth=2
+text-only                      20  ok         elements=3 styled=3 max_depth=3
+unclosed-style                 20  ok         elements=4 styled=4 max_depth=4
+unclosed-script                20  ok         elements=4 styled=4 max_depth=4
+unclosed-comment               20  ok         elements=3 styled=3 max_depth=3
+unclosed-title                 20  ok         elements=4 styled=3 max_depth=4
+unclosed-textarea              20  ok         elements=4 styled=4 max_depth=4
+plaintext                      20  ok         elements=4 styled=4 max_depth=4
+misnested-fmt                  20  ok         elements=6 styled=6 max_depth=5
+table-foster                   20  ok         elements=8 styled=8 max_depth=7
+stray-close                    20  ok         elements=5 styled=5 max_depth=4
+multi-body-head                20  ok         elements=3 styled=3 max_depth=3
+foreign-svg                    20  ok         elements=7 styled=7 max_depth=6
+foreign-math                   20  ok         elements=6 styled=6 max_depth=6
+null-bytes                     20  ok         elements=5 styled=5 max_depth=4
+bad-entities                   20  ok         elements=4 styled=4 max_depth=4
+unquoted-attrs                 20  ok         elements=3 styled=3 max_depth=2
+cdata-outside-foreign          20  ok         elements=4 styled=4 max_depth=3
+bogus-doctype                  20  ok         elements=4 styled=4 max_depth=4
+processing-instr               20  ok         elements=3 styled=3 max_depth=4
+css-junk-inline                20  ok         elements=4 styled=4 max_depth=4
+css-unbalanced-brace           20  ok         elements=5 styled=4 max_depth=4
+css-bad-important              20  ok         elements=4 styled=4 max_depth=4
+css-nested-junk                20  ok         elements=5 styled=4 max_depth=4
+css-var-selfref                20  ok         elements=4 styled=4 max_depth=4
+attr-50k                       20  ok         elements=4 styled=4 max_depth=4
+deep-div-10k                 1066  ok         elements=10003 styled=10003 max_depth=10003
+deep-div-100k               60014  TIMEOUT    input_bytes=500013
+deep-b-10k                    443  ok         elements=10003 styled=10003 max_depth=10003
+deep-unclosed-p-50k           101  ok         elements=50003 styled=50003 max_depth=4
+many-siblings-200k            523  ok         elements=200003 styled=200003 max_depth=4
+deep-css-nesting             1146  FAIL(signal: 6 (SIGABRT) (core dumped)) thread 'main' (13089) has overflowed its stack
+invalid-utf8-ish               20  ok         elements=4 styled=4 max_depth=4

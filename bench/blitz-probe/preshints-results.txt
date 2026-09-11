@@ -1,0 +1,32 @@
+HINT                             PROPERTY           STATUS     COMPUTED
+--------------------------------------------------------------------------------------------------------------
+bgcolor="#ffffff"                background-color   PASS       Absolute(AbsoluteColor { components: Color
+bgcolor="white" (named)          background-color   MISSING    Absolute(AbsoluteColor { components: Color
+bgcolor="ffffff" (bare hex)      background-color   MISSING    Absolute(AbsoluteColor { components: Color
+body bgcolor                     background-color   PASS       Absolute(AbsoluteColor { components: Color
+<font color="#ff0000">           color              MISSING    AbsoluteColor { components: ColorComponent
+<font color="red">               color              MISSING    AbsoluteColor { components: ColorComponent
+<font size="7">                  font-size          MISSING    16.0 px
+<font face="Courier">            font-family        MISSING    FontFamily { families: FontFamilyList { li
+body text="#ff0000"              color              MISSING    AbsoluteColor { components: ColorComponent
+align="center" (div)             text-align         PASS       MozCenter
+align="right" (td)               text-align         PASS       MozRight
+valign="top" (td)                vertical-align     MISSING    Middle/Auto
+width="300" (td)                 width              PASS       LengthPercentage(NonNegative(Length(300.0 
+width="50%" (table)              width              PASS       LengthPercentage(NonNegative(Percentage(Pe
+height="200" (td)                height             PASS       LengthPercentage(NonNegative(Length(200.0 
+img width/height                 width              PASS       LengthPercentage(NonNegative(Length(100.0 
+hspace="20" (img)                margin-left        PASS       LengthPercentage(Length(20.0 px))
+border="5" (table)               border-top-width   MISSING    BorderSideWidth(3px)
+border="3" (img)                 border-top-width   MISSING    BorderSideWidth(3px)
+cellpadding="10"                 padding-left       MISSING    NonNegative(Length(1.0 px))
+cellspacing="10"                 border-spacing     MISSING    GenericBorderSpacing(Size2D { width: NonNe
+nowrap (td)                      white-space        MISSING    Collapse
+background="https://e.invalid/u.png" (table) background-image   MISSING    OwnedList([none])
+<center>                         text-align         PASS       MozCenter
+<nobr>                           white-space        MISSING    Collapse
+type="a" (ol)                    list-style-type    MISSING    ListStyleType(Name(CustomIdent(Atom('decim
+marginwidth (body)               margin-left        PASS       LengthPercentage(Length(0.0 px))
+hidden attribute                 display            PASS       Display(0)
+
+applied: 12   MISSING (we must transform): 16
